@@ -1,0 +1,109 @@
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="bd">
+    <div class="searchbar">
+        <input class="inputbox" type="text"  placeholder="Enter Country Name">
+    </div>
+
+    <div id="mcard">
+
+
+    </div>
+    
+
+</body>
+
+
+<script>
+  
+
+
+  const cnt = document.querySelector("#mcard") ;
+
+  const request = new XMLHttpRequest();
+
+  const inputarea =document.querySelector(".inputbox");
+  
+  inputarea.addEventListener('keyup',(e)=>{
+      if(e.keyCode==13){
+          fetchResults()
+      }
+
+  })
+
+   function fetchResults(){
+        request.open('GET',`https://restcountries.com/v2/name/${inputarea.value}`) ;
+        request.send();  
+   }
+
+
+
+
+  request.addEventListener('load',function(){
+    if(JSON.parse(this.responseText).status==404){
+        
+        cnt.innerHTML = "";
+        const div=document.createElement('div')
+        div.id="errordiv";
+        div.innerHTML = "Invalid Country";
+        document.querySelector("#mcard").appendChild(div);
+    }
+    else {
+
+    
+    const [data]=JSON.parse(this.responseText) ;
+    const htmldata =
+    `<div id="card">
+        <div id="divbody">
+            <img src="${data.flag}" alt="country_flag"/>
+            <h2 class="title">${data.name}</h2>
+            <p id="cardtext">Capital : ${data.capital} </p>
+        </div>
+        <hr>
+  
+        <div id="footer">
+
+            <div id="footersocial">
+                <h3> ${data.nativeName}    </h3>
+                 <p>Native Language </p>
+            </div>
+
+            <div id="footersocial">
+                <h3>  ${data.population}   </h3>
+                <p>Population </p>
+            </div>
+
+            <div id="footersocial">
+                <h3>  ${data.demonym} </h3>
+                <p>Demonym </p>
+            </div>
+        </div>
+  
+
+ </div>  `;
+   cnt.innerHTML = "";
+    cnt.insertAdjacentHTML("beforeend",htmldata);
+
+    
+  }
+        
+        
+    
+    
+   
+
+   
+    
+    
+  }) ;
+
+
+
+</script>
+
+
+
+
+</html>
